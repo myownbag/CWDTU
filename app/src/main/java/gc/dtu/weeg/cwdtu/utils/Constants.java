@@ -60,7 +60,7 @@ public class Constants {
     public static final int FIRMWARE_CONVERT_FAIL=2;
     public static final int FIRMWARE_CONVERT_BUSING=3;
     public static final String FIRM_BASEUPDATESERVICER = "http://www.dssawell.com/download/CWDTU/";
-    public static final String FIRM_UPDATESERVER_INFO = "DTUGC2018.txt";
+    public static final String FIRM_UPDATESERVER_INFO = "CWDTU.txt";
 
     public static final int FIRMWARE_DATAWRITE_TIMEOUT=6;
     public static final int FIRMWARE_DATAERROR_TIMEOUT=7;

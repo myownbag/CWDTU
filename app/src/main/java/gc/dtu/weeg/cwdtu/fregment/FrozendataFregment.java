@@ -107,20 +107,21 @@ public class FrozendataFregment extends BaseFragment implements View.OnClickList
             // 防止多次new出片段对象，造成图片错乱问题
             return mView;
         }
-        mView = inflater.inflate(R.layout.freeze_data_layout, container, false);
-        mlistdata=new ArrayList<>();
-        helper = new FreezedataSqlHelper(getContext(), Constants.TABLENAME1
-                ,null,1);  //this.helper = new MyDatabaseHelper(this) ;
-
-        //初始化线程池
-        executorPool = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME,
-                TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(BLOCK_SIZE),
-                Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
-        executorPool.allowCoreThreadTimeOut(false);
-        Log.d("zl","队列长度"+executorPool.getQueue().size());
-        Log.d("zl","getactivityTask"+executorPool.getActiveCount());
-        MainActivity.getInstance().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        initView();
+        mView = inflater.inflate(R.layout.reserved_show_fragment,container,false);
+//        mView = inflater.inflate(R.layout.freeze_data_layout, container, false);
+//        mlistdata=new ArrayList<>();
+//        helper = new FreezedataSqlHelper(getContext(), Constants.TABLENAME1
+//                ,null,1);  //this.helper = new MyDatabaseHelper(this) ;
+//
+//        //初始化线程池
+//        executorPool = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME,
+//                TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(BLOCK_SIZE),
+//                Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+//        executorPool.allowCoreThreadTimeOut(false);
+//        Log.d("zl","队列长度"+executorPool.getQueue().size());
+//        Log.d("zl","getactivityTask"+executorPool.getActiveCount());
+//        MainActivity.getInstance().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        initView();
         return  mView;
 
     }

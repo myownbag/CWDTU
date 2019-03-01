@@ -86,6 +86,7 @@
                     style="@style/statesetbtnstyle"
                     android:layout_margin="3dp"
                     android:text="C16气体传感器"
+                    android:visibility="gone"
                     />
                 <RadioButton
                     android:id="@+id/sensor_reset"
