@@ -92,7 +92,7 @@
                     android:id="@+id/sensor_reset"
                     style="@style/statesetbtnstyle"
                     android:layout_margin="3dp"
-                    android:text="数据保存并复位"
+                    android:text="退出工程模式"
                     />
             </RadioGroup>
 

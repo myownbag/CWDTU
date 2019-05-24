@@ -22,12 +22,20 @@ import gc.dtu.weeg.cwdtu.utils.ToastUtils;
 public class AppVersioninfoFregment extends BaseFragment implements View.OnClickListener {
     public View mView;
     public TextView mVresionCode;
-//    public TextView mVersionName;
+    //    public TextView mVersionName;
+    public int selectbutID=0;
     public Button mbut;
-    public byte[] cmdrest={(byte)0xFD ,0x00 ,0x00 ,0x0E ,0x00 ,
-            0x15 ,0x00 ,0x00 ,0x00 ,0x00 ,
-            0x00 ,0x00 ,0x00 ,0x00 ,0x63 ,
-            0x00 ,(byte)0xA5 ,0x52 ,(byte)0x88};
+    public Button mbutexit;
+    public byte[] cmdrest = {(byte) 0xFD, 0x00, 0x00, 0x0E, 0x00,
+            0x15, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x63,
+            0x00, (byte) 0xA5, 0x52, (byte) 0x88}; //直接复位
+
+    public byte[] cmdreset2 = {(byte) 0xFD, 0x00, 0x00, 0x0E, 0x00,
+            0x15, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x62,
+            0x00, (byte) 0xA5, 0x52, (byte) 0x88};    //保存数据并且复位
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,7 +54,9 @@ public class AppVersioninfoFregment extends BaseFragment implements View.OnClick
         mVresionCode= mView.findViewById(R.id.app_version_code_text);
 //        mVersionName= mView.findViewById(R.id.app_version_name_text);
         mbut = mView.findViewById(R.id.app_version_btn_reset);
+        mbutexit = mView.findViewById(R.id.app_version_btn_reset2);
         mbut.setOnClickListener(this);
+        mbutexit.setOnClickListener(this);
         mVresionCode.setText(""+ BuildConfig.VERSION_CODE+"."+BuildConfig.VERSION_NAME);
 //        mVersionName.setText(BuildConfig.VERSION_NAME);
     }
@@ -60,7 +70,7 @@ public class AppVersioninfoFregment extends BaseFragment implements View.OnClick
     @Override
     public void onClick(View v) {
 
-
+        selectbutID = v.getId();
         Dialog dialog = new AlertDialog.Builder(MainActivity.getInstance()) // 实例化对象
                 .setIcon(R.drawable.i_ve_got_it) 						// 设置显示图片
                 .setTitle("蓝牙断开提示:") 							// 设置显示标题
@@ -69,7 +79,21 @@ public class AppVersioninfoFregment extends BaseFragment implements View.OnClick
                         new DialogInterface.OnClickListener() {	// 设置操作监听
                             public void onClick(DialogInterface dialog,
                                                 int whichButton) { 			// 单击事件
-                                String readOutMsg = DigitalTrans.byte2hex(cmdrest);
+                                String readOutMsg;
+                                switch (selectbutID)
+                                {
+                                    case R.id.app_version_btn_reset:
+
+                                        readOutMsg =  DigitalTrans.byte2hex(cmdrest);
+                                        break;
+                                    case R.id.app_version_btn_reset2:
+                                        CodeFormat.crcencode(cmdreset2);
+                                        readOutMsg =  DigitalTrans.byte2hex(cmdreset2);
+                                        break;
+                                        default:
+                                            readOutMsg =  DigitalTrans.byte2hex(cmdrest);
+                                            break;
+                                }
                                 verycutstatus(readOutMsg,1000);
                             }
                         }).create(); 							// 创建Dialog

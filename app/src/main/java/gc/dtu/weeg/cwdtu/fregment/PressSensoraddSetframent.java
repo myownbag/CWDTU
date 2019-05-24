@@ -32,6 +32,7 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
    public int mSelectfun=0;
    public String cmd1="+++++7";
    public String cmdgas="+++++4";
+   public String cmdexit = "+++++E";
    String[] cmds={"R_1","R_2","W12","W21"};
    Dialog minfodlg;
    String cmdgasitems[]=
@@ -92,17 +93,17 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
                         if(mMainselectmode==0)
                         {
                             cmd=factorysetcmd[0];
+                            CodeFormat.crcencode(cmd);
                         }
                         else if(mMainselectmode==4)
                         {
-                            cmd=factorysetcmd[1];
-
+//                            cmd=factorysetcmd[1];
+                            cmd = cmdexit.getBytes();
                         }
                         else
                         {
                             cmd=new byte[3];
                         }
-                        CodeFormat.crcencode(cmd);
                         String readOutMsg = DigitalTrans.byte2hex(cmd);
                         verycutstatus(readOutMsg,2000);
                         Log.d("zl","in dialog:"+CodeFormat.byteToHex(cmd,cmd.length));
