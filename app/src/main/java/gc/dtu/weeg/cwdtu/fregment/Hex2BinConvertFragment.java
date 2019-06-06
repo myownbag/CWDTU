@@ -8,8 +8,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.method.ScrollingMovementMethod;
@@ -24,6 +23,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.Nullable;
 import org.xutils.common.Callback;
 import org.xutils.common.task.PriorityExecutor;
 import org.xutils.http.RequestParams;
@@ -70,6 +70,7 @@ public class Hex2BinConvertFragment extends BaseFragment implements  EasyPermiss
     private byte[] byte_firmware;
     private Semaphore semaphore = new Semaphore(1);
     private Semaphore semaphore2 = new Semaphore(1);
+    private Semaphore semaphore3 = new Semaphore(1);
 
     private String buftextshow;
 
@@ -88,6 +89,7 @@ public class Hex2BinConvertFragment extends BaseFragment implements  EasyPermiss
     private Thread ErrorTimesTh=null;
 
     private int ErrorTimesCounter=0;
+    private int timeoutCounter=0;
 
     //Http 请求
     Callback.Cancelable httpget;
@@ -104,8 +106,13 @@ public class Hex2BinConvertFragment extends BaseFragment implements  EasyPermiss
         return mView;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    }
+
+        @Override
+    public void onRequestPermissionsResult(int requestCode,  String[] permissions,  int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
 //        Intent intent = new Intent();  intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -411,7 +418,7 @@ public class Hex2BinConvertFragment extends BaseFragment implements  EasyPermiss
                         memcry(sendbuf1,sendbuf,1,0,sendbuf.length);
 
                         CodeFormat.crcencode(sendbuf1);
-                        verycutstatus(sendbuf1,2000);
+                        verycutstatus(sendbuf1,6000);
 //                        Log.d("zl","新增序号 "+CodeFormat.byteToHex(sendbuf1,sendbuf1.length).toLowerCase());
                         int process=databytelen*100/byte_firmware.length;
                         if(mprodlg.isShowing())
@@ -546,7 +553,54 @@ public class Hex2BinConvertFragment extends BaseFragment implements  EasyPermiss
         }
         else if(code==Constants.FIRMWARE_DATAWRITE_TIMEOUT)
         {
-            data_write_timeout();
+            Log.d("zl","time out");
+
+                int temp1=0;
+                try {
+                    semaphore3.acquire();
+                    temp1=timeoutCounter;
+                    semaphore3.release();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if(temp1<3)
+                {
+                    byte sendbuf[]=new byte[mpackagelen+4];
+                    ByteBuffer buf;
+                    buf = ByteBuffer.allocateDirect(4);
+                    buf.order(ByteOrder.LITTLE_ENDIAN);
+                    buf.putInt(mpackageIndex);
+                    buf.rewind();
+                    buf.get(sendbuf,0,2);
+                    memcry(sendbuf,byte_firmware,2,databytelen,Constants.FIRM_WRITE_FRAMELEN);
+                    //根据新协议添加步骤 头部
+                    byte sendbuf1[]=new byte[mpackagelen+5];
+                    sendbuf1[0]=0x02;
+
+                    memcry(sendbuf1,sendbuf,1,0,sendbuf.length);
+                    CodeFormat.crcencode(sendbuf1);
+                    verycutstatus(sendbuf1,2000);
+                    CodeFormat.crcencode(sendbuf1);
+                    Log.d("zl","超时计数器:"+temp1);
+                    Log.d("zl","新增序号 超时"+CodeFormat.byteToHex(sendbuf1,sendbuf1.length).toLowerCase());
+//                        mprodlg.show();
+                    mprodlg.show("正在写入...");
+                    int process=databytelen*100/byte_firmware.length;
+                    mprodlg.setCurProcess(process);
+            }
+                else
+                {
+                    try {
+                        semaphore3.acquire();
+                        timeoutCounter = 0;
+                        semaphore3.release();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    data_write_timeout();
+                }
+
+
         }
         else if(code==Constants.FIRMWARE_DATAERROR_TIMEOUT)
         {
@@ -578,7 +632,8 @@ public class Hex2BinConvertFragment extends BaseFragment implements  EasyPermiss
                 CodeFormat.crcencode(sendbuf1);
                 verycutstatus(sendbuf1,2000);
                 CodeFormat.crcencode(sendbuf1);
-                Log.d("zl","新增序号 超时"+CodeFormat.byteToHex(sendbuf1,sendbuf1.length).toLowerCase());
+                Log.d("zl","数据错误计数器:"+temp);
+                Log.d("zl","新增序号 数据错误"+CodeFormat.byteToHex(sendbuf1,sendbuf1.length).toLowerCase());
 //                        mprodlg.show();
                 mprodlg.show("正在写入...");
                 int process=databytelen*100/byte_firmware.length;
@@ -894,7 +949,6 @@ public class Hex2BinConvertFragment extends BaseFragment implements  EasyPermiss
         }
         if(timeout>0)
         {
-
             cv = new Thread(new timeoutSupervisor(timeout));
             cv.start();
         }
@@ -912,6 +966,9 @@ public class Hex2BinConvertFragment extends BaseFragment implements  EasyPermiss
        public void run() {
            try {
                Thread.sleep(mtimeout);
+               semaphore3.acquire();
+               timeoutCounter++;
+               semaphore3.release();
                mHander.obtainMessage(BluetoothState.MESSAGE_CONVERT_INFO,Constants.FIRMWARE_DATAWRITE_TIMEOUT,1)
                        .sendToTarget();
            } catch (InterruptedException e) {

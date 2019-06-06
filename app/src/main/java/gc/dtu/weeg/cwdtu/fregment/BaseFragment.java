@@ -1,9 +1,10 @@
 package gc.dtu.weeg.cwdtu.fregment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+
+import org.jetbrains.annotations.Nullable;
 
 import gc.dtu.weeg.cwdtu.MainActivity;
 

@@ -3,7 +3,6 @@ package gc.dtu.weeg.cwdtu.fregment;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.warkiz.widget.IndicatorSeekBar;
+
+import org.jetbrains.annotations.Nullable;
 
 import gc.dtu.weeg.cwdtu.MainActivity;
 import gc.dtu.weeg.cwdtu.R;

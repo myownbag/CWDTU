@@ -2,7 +2,6 @@ package gc.dtu.weeg.cwdtu.fregment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +18,14 @@ import com.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import gc.dtu.weeg.cwdtu.MainActivity;
 import gc.dtu.weeg.cwdtu.R;
 import gc.dtu.weeg.cwdtu.bean.instrumentfactotyinfobean;
 import gc.dtu.weeg.cwdtu.utils.CodeFormat;
