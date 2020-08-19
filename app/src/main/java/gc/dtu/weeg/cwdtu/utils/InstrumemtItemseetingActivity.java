@@ -104,7 +104,7 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
             {"2000","2","Control Valve","10500"},
             {"2000","2","电压读取","10501"},
     };
-    public static String factorysinfo[]={"Empty","天信仪表","苍南仪表","德闻仪表","埃创仪表","Elster仪表","爱知仪表","卓度仪表","阀门控制"};
+    public static String factorysinfo[]={"Empty","天信仪表","苍南仪表","德闻仪表","埃创仪表","Elster仪表","爱知仪表","卓度仪表","阀门控制","脉冲采集"};
     public static String Instrumentinfo[][]={
             {"0","0","Empty","0"}, //factorysinfo中的序号，   有无子菜单（0：无，1：有） ,子菜单选项  ,选项值
             {"1","1","Trancy 1.2","1001"},
@@ -137,6 +137,7 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
             {"7","1","MFFD","1016"},
 
             {"8","0","阀门控制","10500"},
+            {"9","0","脉冲采集","5000"},
     };
 
     int reg;
@@ -302,6 +303,7 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
             return;
         }
         CodeFormat.crcencode(sendbuf);
+//        Log.d("zl","instrument out: "+CodeFormat.byteToHex(sendbuf,sendbuf.length).toUpperCase());
         String readOutMsg = DigitalTrans.byte2hex(sendbuf);
         verycutstatus(readOutMsg);
 //        if(settings==null)

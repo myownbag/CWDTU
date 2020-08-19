@@ -270,7 +270,7 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
                 MainActivity.getInstance().mDialog.dismiss();
                 break;
             case 2:
-                if(readOutBuf1[2]==0)
+                if(readOutBuf1[2]==0 || (readOutBuf1[2]&0x02) != 0 )
                 {
                     mfunstep++;
                     switch (mSelectfun)
@@ -293,6 +293,14 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
                             Log.d("zl",readOutMsg);
                             break;
                     }
+                }
+                else if( (readOutBuf1[2]&0x01) != 0)
+                {
+                    mTextResultView.setText("红外探头预热中");
+                }
+                else if((readOutBuf1[2]&0x04)!=0)
+                {
+                    mTextResultView.setText("红外探头可能受潮");
                 }
                 else
                 {

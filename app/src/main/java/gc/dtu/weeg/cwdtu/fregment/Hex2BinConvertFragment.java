@@ -191,6 +191,8 @@ public class Hex2BinConvertFragment extends BaseFragment implements  EasyPermiss
                 updatestep=-1;
             }
         });
+
+        mprodlg.setCanceledOnTouchOutside(false);
     }
 
     private void initListener() {

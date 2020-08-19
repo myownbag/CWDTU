@@ -24,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import org.xutils.x;
 
 import java.util.ArrayList;
@@ -44,6 +43,7 @@ import gc.dtu.weeg.cwdtu.fregment.Hex2BinConvertFragment;
 import gc.dtu.weeg.cwdtu.fregment.InstrumentInputFregment;
 import gc.dtu.weeg.cwdtu.fregment.LocalsettngsFregment;
 import gc.dtu.weeg.cwdtu.fregment.NBRegisiterfragment;
+import gc.dtu.weeg.cwdtu.fregment.PluseInputSettingFragment;
 import gc.dtu.weeg.cwdtu.fregment.PressSensoraddSetframent;
 import gc.dtu.weeg.cwdtu.fregment.RealtimedataFregment;
 import gc.dtu.weeg.cwdtu.fregment.SensorInputFregment;
@@ -95,7 +95,7 @@ public class MainActivity extends FragmentActivity {
     int mScrollX = 0;
     private List<BaseFragment> fragments;
     public String[] titles=new String[]{"基本信息","实时数据", "历史数据","本机设置"
-            , "压力设置","报警器设置", "修正仪表接入","传感器调试","NB业务注册",/*"阀门控制",*/"版本信息","固件升级"};
+            , "压力设置","报警器设置", "修正仪表接入","脉冲信号设置","传感器调试","NB业务注册",/*"阀门控制",*/"版本信息","固件升级"};
     //蓝牙状态保存
     public Boolean mIsconnect = false;
     // Name of the connected device
@@ -125,6 +125,8 @@ public class MainActivity extends FragmentActivity {
     public Hex2BinConvertFragment   fragment10;
     public GasSensorSetFragment     fragment11;
     public GateStatusControlFragment fragment12;
+
+    public PluseInputSettingFragment fragment13;
 
 
     //接口
@@ -375,6 +377,14 @@ public class MainActivity extends FragmentActivity {
         bundle5.putString("extra",titles[index++]);
         fregment6.setArguments(bundle5);
         fragments.add(fregment6);
+
+        fragment13 = new PluseInputSettingFragment();
+        Bundle bundle10 = new Bundle();
+        bundle10.putInt("position",index);
+        bundle10.putString("extra",titles[index++]);
+        fragment13.setArguments(bundle10);
+        fragments.add(fragment13);
+
 
         fregment7 =new PressSensoraddSetframent();
         Bundle bundle6 = new Bundle();

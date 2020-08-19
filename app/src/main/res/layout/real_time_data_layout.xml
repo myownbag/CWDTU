@@ -348,14 +348,15 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="40dp"
                             android:text="t(℃):"/>
+
                         <TextView
                             android:id="@+id/real_tem1_timeinfo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_toRightOf="@id/real_time_tem1_labale"
+                            android:layout_marginStart="40dp"
+                            android:layout_marginLeft="40dp"
                             android:layout_toEndOf="@id/real_time_tem1_labale"
-                            />
+                            android:layout_toRightOf="@id/real_time_tem1_labale" />
                     </RelativeLayout>
                     <View
                         android:layout_width="match_parent"

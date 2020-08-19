@@ -496,9 +496,9 @@ public class LocalsettngsFregment extends BaseFragment {
             serverIntent.putExtra("name",registersetting);
             serverIntent.putExtra("settings",registerconnet);
             serverIntent.putExtra("datalen",registerlen);
-            mModuleType=settingscontent[4];
+            mModuleType=settingscontent[3];
             serverIntent.putExtra("addr198setting",mModuleType);
-            serverIntent.putExtra("220addrset",settingscontent[6]);
+            serverIntent.putExtra("220addrset",settingscontent[5]);
             if(registername.equals("220"))
             {
                 ToastUtils.showToast(MainActivity.getInstance(),"寄存器220必须和201关联设置");

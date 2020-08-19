@@ -13,6 +13,7 @@ public class Constants {
     public static final int  SensorlsetingFlag = 801;
     public static final int  InstrumemtsetingFlag = 802;
     public static final int  NBINPUTSETTINGFLAG = 803;
+    public static final int  PLUSESETTINGFLAG = 805;
 
     public static final int  GCOPENTIME = 8000;
     public static final int  GCCLOSETIME = 6000;

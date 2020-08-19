@@ -160,11 +160,11 @@ public class RealtimedataFregment extends BaseFragment  implements View.OnClickL
         }
     }
 
-    private void parsecurrentdata(byte[] readOutBuf1,int offset,TextView view,String unit,int parsetype) {
+    private void parsecurrentdata(byte[] buf,int offset,TextView view,String unit,int parsetype) {
         int temp;ByteBuffer buf1;
         buf1=ByteBuffer.allocateDirect(4);
         buf1=buf1.order(ByteOrder.LITTLE_ENDIAN);
-        buf1.put(readOutBuf1,offset,4);
+        buf1.put(buf,offset,4);
         buf1.rewind();
         temp=buf1.getInt();
         if(parsetype== Constants.PARSE_INT)
@@ -176,7 +176,7 @@ public class RealtimedataFregment extends BaseFragment  implements View.OnClickL
         {
             buf1=ByteBuffer.allocateDirect(4);
             buf1=buf1.order(ByteOrder.LITTLE_ENDIAN);
-            buf1.put(readOutBuf1,offset,4);
+            buf1.put(buf,offset,4);
             buf1.rewind();
             float pressflaot =buf1.getFloat();
             if(parsetype==Constants.PARSE_FLOAT1)
