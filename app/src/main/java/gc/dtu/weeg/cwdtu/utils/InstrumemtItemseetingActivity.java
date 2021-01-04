@@ -100,6 +100,7 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
             {"2000","2","PTZ_BOX CV","1019"},
             {"2000","2","AS Ultrasonic_80","1020"},
             {"2000","2","Trancy cpuCard","1021"},
+            {"2000","2","PTZBox_IGSM_Modbus","1030"},
 
             {"2000","2","Control Valve","10500"},
             {"2000","2","电压读取","10501"},
@@ -121,6 +122,7 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
             {"3","1","V3","1008"},
             {"3","1","V3-2","1009"},
             {"3","1","CV","1019"},
+            {"3","1","PTZBox_IGSM_Modbus","1030"},
 
             {"4","1","通用","1010"},
             {"4","1","2003","1011"},

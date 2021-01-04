@@ -34,6 +34,7 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
    public String cmd1="+++++7";
    public String cmdgas="+++++4";
    public String cmdexit = "+++++E";
+
    String[] cmds={"R_1","R_2","W12","W21"};
    Dialog minfodlg;
    String cmdgasitems[]=
@@ -99,6 +100,7 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
                         else if(mMainselectmode==4)
                         {
 //                            cmd=factorysetcmd[1];
+                            Log.d("zl","退出工程模式:" +cmdexit);
                             cmd = cmdexit.getBytes();
                         }
                         else
@@ -117,6 +119,7 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
     @Override
     public void OndataCometoParse(String readOutMsg1, byte[] readOutBuf1) {
         Log.d("zl", "OndataCometoParse: "+CodeFormat.byteToHex(readOutBuf1,readOutBuf1.length));
+        Log.d("zl","current step: "+mfunstep);
         StringBuilder tempstr= new StringBuilder();
         for (byte aReadOutBuf1 : readOutBuf1) {
             tempstr.append((char) aReadOutBuf1);
@@ -287,20 +290,35 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
                             break;
                         case 5:
                         case 6:
-                            readOutMsg = DigitalTrans.byte2hex("UART?\r".getBytes());
-                            verycutstatus(readOutMsg);
-                            Log.d("zl","IN press: UART?");
-                            Log.d("zl",readOutMsg);
+                            /***************************
+                             *
+                             * 不用判断OEM模式
+                             * ***********************/
+//                            readOutMsg = DigitalTrans.byte2hex("UART?\r".getBytes());
+//                            verycutstatus(readOutMsg);
+//                            Log.d("zl","IN press: UART?");
+//                            Log.d("zl",readOutMsg);
+
+                            /*******************
+                             *
+                             * 直接下行读数指令
+                             * **********************/
+                            Log.d("zl","checkstep2 to sendstep4");
+                            sendstep4();
+                            mfunstep = 4;
+
                             break;
                     }
                 }
                 else if( (readOutBuf1[2]&0x01) != 0)
                 {
                     mTextResultView.setText("红外探头预热中");
+                    MainActivity.getInstance().mDialog.dismiss();
                 }
                 else if((readOutBuf1[2]&0x04)!=0)
                 {
                     mTextResultView.setText("红外探头可能受潮");
+                    MainActivity.getInstance().mDialog.dismiss();
                 }
                 else
                 {

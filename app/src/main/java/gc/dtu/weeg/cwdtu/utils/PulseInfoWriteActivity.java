@@ -91,7 +91,6 @@ public class PulseInfoWriteActivity extends Activity implements View.OnClickList
 
         intent = getIntent();
         String[] initdata =  intent.getStringArrayExtra("PLUSEDATA");
-        spinner.setSelection(index,true);
         if(initdata!=null)
         {
             for(index = 0;index <PluseInputSettingFragment.PulseDataFormate.length;index++ )

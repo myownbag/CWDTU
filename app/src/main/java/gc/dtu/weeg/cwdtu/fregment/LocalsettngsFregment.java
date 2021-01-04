@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +54,7 @@ public class LocalsettngsFregment extends BaseFragment {
             {"101","供电选择","1","L"},
             {"103","用户编号","8","T"},
             {"110","阀门选择","10","L"},
+//            {"197","上传解析协议","1","L"},
             {"198","通信模块","1","L"},
             {"201","联网参数","40","E"},
             {"220","电信APN","40","T"},
@@ -86,6 +88,9 @@ public class LocalsettngsFregment extends BaseFragment {
 //                    {"110","EMV CV GC","2"},
 //                    {"110","EMV CV G6+","3"},
 //                    {"110","EMV BV","4"},
+//                    {"197","维格TCP","0"},
+//                    {"197","维格IOT通用","1"},
+//                    {"197","杭州IOT通用","2"},
                     //无线模块
 //                    {"198","","-1"},
                     {"198","模块关闭","0"},
@@ -389,12 +394,22 @@ public class LocalsettngsFregment extends BaseFragment {
         @SuppressLint({"ViewHolder", "SetTextI18n"})
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+
             convertView=View.inflate(MainActivity.getInstance(),R.layout.localsetitem,null);
             TextView registerser=convertView.findViewById(R.id.sernum_item) ;
             TextView registeraddr=convertView.findViewById(R.id.register_item) ;
             TextView registerinfo=convertView.findViewById(R.id.registerinfo_item) ;
             TextView registerlenth=convertView.findViewById(R.id.registerlen_item) ;
             TextView regisiteritem=convertView.findViewById(R.id.registerset_item);
+            LinearLayout hideview = convertView.findViewById(R.id.hideitem);
+            if(position == 9)
+            {
+                hideview.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                hideview.setVisibility(View.GONE);
+            }
             registerser.setText(""+(position+1));
             registeraddr.setText(baseinfo[position][0]);
             registerinfo.setText(baseinfo[position][1]);
