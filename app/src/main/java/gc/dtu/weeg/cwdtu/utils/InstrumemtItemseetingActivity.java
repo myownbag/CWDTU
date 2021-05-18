@@ -101,11 +101,12 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
             {"2000","2","AS Ultrasonic_80","1020"},
             {"2000","2","Trancy cpuCard","1021"},
             {"2000","2","PTZBox_IGSM_Modbus","1030"},
+            {"2000","2","机床五厂","1031"},
 
             {"2000","2","Control Valve","10500"},
             {"2000","2","电压读取","10501"},
     };
-    public static String factorysinfo[]={"Empty","天信仪表","苍南仪表","德闻仪表","埃创仪表","Elster仪表","爱知仪表","卓度仪表","阀门控制","脉冲采集"};
+    public static String factorysinfo[]={"Empty","天信仪表","苍南仪表","德闻仪表","埃创仪表","Elster仪表","爱知仪表","卓度仪表","阀门控制","供水仪表","机床五厂"};
     public static String Instrumentinfo[][]={
             {"0","0","Empty","0"}, //factorysinfo中的序号，   有无子菜单（0：无，1：有） ,子菜单选项  ,选项值
             {"1","1","Trancy 1.2","1001"},
@@ -139,7 +140,11 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
             {"7","1","MFFD","1016"},
 
             {"8","0","阀门控制","10500"},
+
             {"9","0","脉冲采集","5000"},
+            {"9","0","肯特流量计","5001"},
+
+            {"10","0","通用","1031"},
     };
 
     int reg;
