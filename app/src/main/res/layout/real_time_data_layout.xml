@@ -485,6 +485,144 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp"
+                app:cardMaxElevation="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/realdata_instrument"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="供水仪表"
+                            />
+                    </LinearLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <TextView
+                            android:id="@+id/real_time_waterq_labale"
+                            android:layout_centerVertical="true"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="40dp"
+                            android:text="Q(m3/h):"/>
+
+                        <TextView
+                            android:id="@+id/real_waterq_timeinfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="40dp"
+                            android:layout_marginLeft="40dp"
+                            android:layout_toEndOf="@id/real_time_waterq_labale"
+                            android:layout_toRightOf="@id/real_time_waterq_labale" />
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#CFCFCF" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <TextView
+                            android:id="@+id/real_waterv_labale"
+                            android:layout_centerVertical="true"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="40dp"
+                            android:text="V(m3)："/>
+                        <TextView
+                            android:id="@+id/real_waterv_timeinfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/real_waterv_labale"
+                            android:layout_toEndOf="@id/real_waterv_labale"
+                            />
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#CFCFCF" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <TextView
+                            android:id="@+id/real_watervf_labale"
+                            android:layout_centerVertical="true"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="40dp"
+                            android:text="Vf(m3)："/>
+                        <TextView
+                            android:id="@+id/real_watervf_timeinfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/real_watervf_labale"
+                            android:layout_toEndOf="@id/real_watervf_labale"
+                            />
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#CFCFCF" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <TextView
+                            android:id="@+id/real_watervb_labale"
+                            android:layout_centerVertical="true"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="40dp"
+                            android:text="Vb(m3)："/>
+                        <TextView
+                            android:id="@+id/real_watervb_timeinfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/real_watervb_labale"
+                            android:layout_toEndOf="@id/real_watervb_labale"
+                            />
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#CFCFCF" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#CFCFCF" />
+
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
         </LinearLayout >
     </ScrollView>
