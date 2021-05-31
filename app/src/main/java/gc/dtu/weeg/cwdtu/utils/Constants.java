@@ -81,4 +81,5 @@ public class Constants {
     public static final int PARSE_FLOAT1=0;
     public static final int PARSE_FLOAT2=1;
     public static final int PARSE_INT=2;
+    public static final int PARSE_DOUBLE=3;
 }

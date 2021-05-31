@@ -44,6 +44,11 @@ public class RealtimedataFregment extends BaseFragment  implements View.OnClickL
     public TextView mFluxview1;
     public TextView mRealFluxview1;
     public TextView mVolumeView1;
+    //供水仪表
+    public TextView mWaterQView;
+    public TextView mWaterVView;
+    public TextView mWaterVfView;
+    public TextView mWaterVbView;
 
     public int step=0;
 
@@ -79,6 +84,12 @@ public class RealtimedataFregment extends BaseFragment  implements View.OnClickL
         mFluxview1 =mView.findViewById(R.id.real_flux1_timeinfo);
         mRealFluxview1=mView.findViewById(R.id.real_realflux1_timeinfo);
         mVolumeView1 =mView.findViewById(R.id.real_volume1_timeinfo);
+//   water meter data
+        mWaterQView = mView.findViewById(R.id.real_waterq_timeinfo);
+        mWaterVView = mView.findViewById(R.id.real_waterv_timeinfo);
+        mWaterVbView = mView.findViewById(R.id.real_watervb_timeinfo);
+        mWaterVfView = mView.findViewById(R.id.real_watervf_timeinfo);
+
 
 
         mBut.setOnClickListener(this);
@@ -156,6 +167,26 @@ public class RealtimedataFregment extends BaseFragment  implements View.OnClickL
             parsecurrentdata(readOutBuf1,30,mRealFluxview1,"",Constants.PARSE_FLOAT2);
             parsecurrentdata(readOutBuf1,34,mVolumeView1,"",Constants.PARSE_INT);
 
+            //读水表信息
+            buf1=ByteBuffer.allocateDirect(4);
+            buf1=buf1.order(ByteOrder.LITTLE_ENDIAN);
+            buf1.putInt(8000);
+            buf1.rewind();
+            buf1.get(sendbufread,14,2);
+            CodeFormat.crcencode(sendbufread);
+            String readOutMsg = DigitalTrans.byte2hex(sendbufread);
+            verycutstatus(readOutMsg);
+            step++;
+            return;
+        }
+        else if(step==3){
+
+            parsecurrentdata(readOutBuf1,26,mWaterQView,"",Constants.PARSE_FLOAT2);
+            parsecurrentdata(readOutBuf1,30,mWaterVView,"",Constants.PARSE_DOUBLE);
+            parsecurrentdata(readOutBuf1,38,mWaterVfView,"",Constants.PARSE_DOUBLE);
+            parsecurrentdata(readOutBuf1,46,mWaterVbView,"",Constants.PARSE_DOUBLE);
+
+
             MainActivity.getInstance().mDialog.dismiss();
         }
     }
@@ -170,7 +201,15 @@ public class RealtimedataFregment extends BaseFragment  implements View.OnClickL
         if(parsetype== Constants.PARSE_INT)
         {
             view.setText(""+temp+unit);
-            return;
+        }
+        else if(parsetype == Constants.PARSE_DOUBLE){
+            double doublevalue =0;
+            buf1=ByteBuffer.allocateDirect(8);
+            buf1=buf1.order(ByteOrder.LITTLE_ENDIAN);
+            buf1.put(buf,offset,8);
+            buf1.rewind();
+            doublevalue=buf1.getDouble();
+            view.setText(""+doublevalue+unit);
         }
         else
         {
@@ -236,6 +275,11 @@ public class RealtimedataFregment extends BaseFragment  implements View.OnClickL
         mFluxview1.setText("");
         mRealFluxview1.setText("");
         mVolumeView1.setText("");
+
+        mWaterQView.setText("");
+        mWaterVView.setText("");
+        mWaterVbView.setText("");
+        mWaterVfView.setText("");
     }
 
     private void verycutstatus(String readOutMsg) {
