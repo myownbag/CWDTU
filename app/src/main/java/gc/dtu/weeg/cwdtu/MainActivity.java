@@ -290,6 +290,12 @@ public class MainActivity extends FragmentActivity {
                     // ToastUtils.showToast(getActivity(), "数据长度异常");
                     Toast.makeText(MainActivity.this, "蓝牙无回应请重连", Toast.LENGTH_SHORT).show();
                     break;
+                case BluetoothState.MESSAGE_STATE_TIMEOUT_NOT_DISCONNECT:
+
+                    mThreedTimeout = null;
+                    mDialog.dismiss();
+
+                    break;
                 case BluetoothState.MESSAGE_BLOCK_TIMEOUT:
                     if(mCurrentpage==fregment3) {
 //                        Log.d("zl","BluetoothState.MESSAGE_BLOCK_TIMEOUT:"+msg.arg1);
@@ -638,6 +644,42 @@ public class MainActivity extends FragmentActivity {
             }
         }
     }
+    public void sendData(String data, String strOwner,int timeout,int connecttype) {
+
+//        Log.d("zl","MainActivity:"+data);
+        // Check that we're actually connected before trying anything
+        if (mBTService.getState() != BluetoothState.STATE_CONNECTED) {
+
+            ToastUtils.showToast(this,  R.string.not_connected);
+            return;
+        }
+
+        // Check that there's actually something to send
+        if (data.length() > 0) {
+            gOwner = strOwner;
+            Log.v("ttt", "Send: " + data);
+            String hexString = data;
+            byte[] buff = DigitalTrans.hex2byte(hexString);
+
+            mBTService.write(buff);
+            if(timeout>0)
+            {
+                if(mThreedTimeout==null)
+                {
+                    if(connecttype == 0) //通信失败就断开链接
+                    {
+                        mThreedTimeout=new BlueToothTimeOutMornitor(timeout);
+                        mThreedTimeout.start();
+                    }
+                    else   //通信失败还保持链接
+                    {
+                        mThreedTimeout=new BlueToothTimeOutMornitor(timeout,BluetoothState.MESSAGE_STATE_TIMEOUT_NOT_DISCONNECT);
+                        mThreedTimeout.start();
+                    }
+                }
+            }
+        }
+    }
 
     public void sendData(byte[] databuf,int timeout)
     {
@@ -779,6 +821,8 @@ public class MainActivity extends FragmentActivity {
     public class BlueToothTimeOutMornitor extends Thread
     {
        public int mtimeout;
+       public int Messagetype;
+//        Message = BluetoothState.
         BlueToothTimeOutMornitor()
         {
             mtimeout=2000;
@@ -786,12 +830,18 @@ public class MainActivity extends FragmentActivity {
         BlueToothTimeOutMornitor(int timeout)
         {
             mtimeout=timeout;
+            Messagetype = BluetoothState.MESSAGE_STATE_TIMEOUT;
+        }
+        BlueToothTimeOutMornitor(int timeout,int connecttype)
+        {
+            mtimeout=timeout;
+            Messagetype = connecttype;
         }
         @Override
         public void run() {
             try {
                 sleep(mtimeout);
-                MainActivity.this.mHandler.obtainMessage(BluetoothState.MESSAGE_STATE_TIMEOUT)
+                MainActivity.this.mHandler.obtainMessage(Messagetype)
                         .sendToTarget(); //       mHandler.obtainMessage(BluetoothState.MESSAGE_READ, bytes, -1, buffer)
                       //  .sendToTarget();
             } catch (InterruptedException e) {

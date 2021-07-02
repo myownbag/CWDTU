@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 
 import gc.dtu.weeg.cwdtu.MainActivity;
 import gc.dtu.weeg.cwdtu.R;
@@ -48,6 +49,7 @@ public class LocalsettngsFregment extends BaseFragment {
 
     //把当前的模块选择项进行保存
     String mModuleType="";
+//    ArrayList<Integer> addrcolect =new ArrayList<>();
     public String[][] baseinfo=
     {
 //            {"100","连接设备属性","1","L",},
@@ -61,6 +63,9 @@ public class LocalsettngsFregment extends BaseFragment {
             {"202","主站IP及端口","6","T"},
             {"205","NTP校时IP及端口","6","T"},
             {"206","通信协议","1","L"},
+            {"197","上传协议","1","T"},
+            {"224","开关信号","4","E"},
+
             {"207","传输方式","1","L"},
             {"208","上传时间方式","1","L"},
             {"209","传输频率(分)","2","T"},
@@ -207,28 +212,41 @@ public class LocalsettngsFregment extends BaseFragment {
         }
         if(Integer.valueOf(baseinfo[mIndexcmd][2])==1)
         {
-            for(i=0;i<registerinfosel.length;i++)
+            if(Integer.valueOf(baseinfo[mIndexcmd][0])==197)
             {
-                byte bytetemp= (byte) (Integer.valueOf(registerinfosel[i][0])%0x100);
-                if(addr==bytetemp)
+                tempint=(0x000000ff&readOutBuf1[16]);
+                temp=""+tempint;
+                settingscontent[mIndexcmd]=temp;
+//                Log.d("zl","197:"+readOutMsg1);
+            }
+            else
+            {
+                for(i=0;i<registerinfosel.length;i++)
                 {
-                    tempint=(0x000000ff&readOutBuf1[15])*0x100+(0x000000ff&readOutBuf1[16]);
-                    if(tempint==Integer.valueOf(registerinfosel[i][2]))
+                    byte bytetemp= (byte) (Integer.valueOf(registerinfosel[i][0])%0x100);
+
+                    if(addr==bytetemp)
                     {
-                        settingscontent[mIndexcmd]=registerinfosel[i][1];
-                        //   myadpater.notifyDataSetChanged();
-                        if(Integer.valueOf(baseinfo[mIndexcmd][0])==208)
+                        tempint=(0x000000ff&readOutBuf1[15])*0x100+(0x000000ff&readOutBuf1[16]);
+                        if(tempint==Integer.valueOf(registerinfosel[i][2]))
                         {
-                            transtrit=tempint;
+                            settingscontent[mIndexcmd]=registerinfosel[i][1];
+                            //   myadpater.notifyDataSetChanged();
+                            if(Integer.valueOf(baseinfo[mIndexcmd][0])==208)
+                            {
+                                transtrit=tempint;
+                            }
+                            else if(Integer.valueOf(baseinfo[mIndexcmd][0])==198)
+                            {
+                                mModuleType = settingscontent[mIndexcmd];
+                            }
+                            break;
                         }
-                        else if(Integer.valueOf(baseinfo[mIndexcmd][0])==198)
-                        {
-                            mModuleType = settingscontent[mIndexcmd];
-                        }
-                        break;
                     }
+
                 }
             }
+
         }
         else if(Integer.valueOf(baseinfo[mIndexcmd][2])==10)
         {
@@ -338,6 +356,31 @@ public class LocalsettngsFregment extends BaseFragment {
                 buf.get(data2convert);
                 settingscontent[mIndexcmd]=LocalSetaddr219ExtraInfoView.Hexinfo2Str(data2convert);
             }
+//            else if(tempint2 == 197) {
+//                tempint=(0x000000ff&readOutBuf1[16]);
+//                temp=""+tempint;
+//                settingscontent[mIndexcmd]=temp;
+//            }
+            else if(tempint2 == 224){
+                int it=0;
+                temp = "";
+                for(it=0;it<4;it++)
+                {
+                    if(readOutBuf1[16+it] == 0)
+                    {
+                        temp+="关";
+                    }
+                    else
+                    {
+                        temp+="开";
+                    }
+                    if(it<3)
+                    {
+                        temp+="-";
+                    }
+                }
+                settingscontent[mIndexcmd]=temp;
+            }
             else
             {
                 temp="";
@@ -402,7 +445,7 @@ public class LocalsettngsFregment extends BaseFragment {
             TextView registerlenth=convertView.findViewById(R.id.registerlen_item) ;
             TextView regisiteritem=convertView.findViewById(R.id.registerset_item);
             LinearLayout hideview = convertView.findViewById(R.id.hideitem);
-            if(position == 9)
+            if(Integer.valueOf(baseinfo[position][0]) == 207)
             {
                 hideview.setVisibility(View.VISIBLE);
             }
@@ -430,11 +473,18 @@ public class LocalsettngsFregment extends BaseFragment {
             byte[] adsinf0;//={1,3,105, (byte) 0xC7};
             mIsatart=true;
             adsinf0=new byte[baseinfo.length];
+//            addrcolect.clear();
             for(i=0;i<adsinf0.length;i++)
             {
                 tempint=Integer.valueOf(baseinfo[i][0]);
                 adsinf0[i]= (byte) (tempint%0x100);
+//                if(tempint == 197 ||tempint == 224)
+//                {
+//                    addrcolect.add(tempint);
+//                }
             }
+
+
             mIndexcmd=0;
             for(int j=0;j<adsinf0.length;j++)
             {
@@ -471,7 +521,7 @@ public class LocalsettngsFregment extends BaseFragment {
             parentActivity1.mDialog.show();
             parentActivity1.mDialog.setDlgMsg("读取中...");
             //String input1 = Constants.Cmd_Read_Alarm_Pressure;
-            parentActivity1.sendData(readOutMsg, "FFFF");
+            parentActivity1.sendData(readOutMsg, "FFFF",2000,1);
         }
         else
         {

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.KeyListener;
 import android.util.Log;
@@ -13,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,6 +21,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ import gc.dtu.weeg.cwdtu.R;
 import gc.dtu.weeg.cwdtu.myview.CustomDialog;
 import gc.dtu.weeg.cwdtu.myview.LocalSetaddr201ExtrainfoView;
 import gc.dtu.weeg.cwdtu.myview.LocalSetaddr219ExtraInfoView;
+import gc.dtu.weeg.cwdtu.myview.LocalSetaddr224ExtraInfoView;
 
 
 /**
@@ -61,6 +64,8 @@ public class ItemSetingActivity extends Activity {
     String str220setting;
     String str201setting;
     boolean str220enable = false;
+
+    LocalSetaddr224ExtraInfoView view224;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +147,11 @@ public class ItemSetingActivity extends Activity {
                 else if("T".equals(mainActivity.fregment4.baseinfo[i][3]))
                 {
                     spinerconter.setVisibility(View.GONE);
+                    String tempaddr= mainActivity.fregment4.baseinfo[i][0];
+                    if(tempaddr.equals("197"))
+                    {
+                        currentshow.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    }
                 }
                 else if("E".equals(mainActivity.fregment4.baseinfo[i][3]))
                 {
@@ -171,6 +181,14 @@ public class ItemSetingActivity extends Activity {
                         view =new LocalSetaddr219ExtraInfoView(this,setcontent);
                         ExtraSetView.addView(view);
                         view.setOncursettingChanged(new OnExteasettingchange219());
+                    }
+                    else if(tempaddr.equals("224"))
+                    {
+                        LocalSetaddr224ExtraInfoView view;
+                        view =new LocalSetaddr224ExtraInfoView(this,setcontent);
+                        ExtraSetView.addView(view);
+                        view224 = view;
+                        view.SETCURLISTERNER(new OnExteasettingchange224());
                     }
                 }
                 else
@@ -307,6 +325,35 @@ public class ItemSetingActivity extends Activity {
                              break;
                      }
 
+                 }
+                 if(addrtemp.equals("197")){
+//                currentshow.setInputType(InputType.TYPE_CLASS_NUMBER)
+                     if(isPositiveNum(temp))
+                     {
+                         if(Integer.valueOf(temp)>=0)
+                         {
+                             sendbuf=new byte[datalen+18];
+                             sendbuf[0]= (byte) 0xFD;
+                             sendbuf[3]= (byte) ((datalen+13)%0x100);
+                             sendbuf[5]=0x15;
+                             sendbuf[14]= (byte) (Integer.valueOf(mainActivity.fregment4.baseinfo[mposition][0])%0x100);
+
+                             ByteBuffer buf = ByteBuffer.allocateDirect(4);
+                             buf.order(ByteOrder.LITTLE_ENDIAN);
+                             buf.putInt(Integer.valueOf(temp));
+                             buf.rewind();
+                             buf.get(sendbuf,16,1);
+                             CodeFormat.crcencode(sendbuf);
+                         }
+                         else
+                         {
+                             ToastUtils.showToast(ItemSetingActivity.this,"只能输入非负数值");
+                         }
+                     }
+                     else
+                     {
+                         ToastUtils.showToast(ItemSetingActivity.this,"只能输入数值");
+                     }
                  }
                  CodeFormat.crcencode(sendbuf);
              }
@@ -461,6 +508,31 @@ public class ItemSetingActivity extends Activity {
                 }
                 CodeFormat.crcencode(sendbuf);
             }
+            else if(addrtemp.equals("224")){
+                byte crusetbyte[] = new byte[4]; // =temp.getBytes();
+                crusetbyte = view224.getcursettings();
+                sendbuf=new byte[datalen+18];
+                sendbuf[0]= (byte) 0xFD;
+                sendbuf[3]= (byte) ((datalen+13)%0x100);
+                sendbuf[5]=0x15;
+                sendbuf[14]= (byte) (Integer.valueOf(mainActivity.fregment4.baseinfo[mposition][0])%0x100);
+
+                if(crusetbyte.length>datalen)
+                {
+                    Toast.makeText(ItemSetingActivity.this,"输入字节超出长度",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                for( i=0;i<datalen;i++)
+                {
+                    if(i<crusetbyte.length)
+                    {
+                        sendbuf[16+i]=crusetbyte[i];
+                    }
+                    else
+                        sendbuf[16+i]=(byte)0x00;
+                }
+                CodeFormat.crcencode(sendbuf);
+            }
             else
             {
                 int index201=0;
@@ -533,7 +605,7 @@ public class ItemSetingActivity extends Activity {
             }
             String readOutMsg = DigitalTrans.byte2hex(sendbuf);
             verycutstatus(readOutMsg);
-            //                        Log.d("zl","temp:"+temp+" "+"position:"+mposition);
+                                    Log.d("zl","temp:"+temp+" "+"position:"+mposition+"-"+readOutMsg);
 //                        intent.putExtra("name",temp);
 //                        intent.putExtra("addrs",mposition);
 //                        ItemSetingActivity.this.setResult(spinerposition,intent);
@@ -688,5 +760,19 @@ public class ItemSetingActivity extends Activity {
         public void OncurSetting(String set, byte[] setbyte) {
             currentshow.setText(set);
         }
+    }
+
+    class OnExteasettingchange224 implements LocalSetaddr224ExtraInfoView.SETTINGCHANGED
+    {
+        @Override
+        public void settingchanged(String s) {
+            currentshow.setText(s);
+        }
+
+    }
+
+    private boolean isPositiveNum(String s)
+    {
+        return s.matches("^[1-9]\\d*|0$");
     }
 }

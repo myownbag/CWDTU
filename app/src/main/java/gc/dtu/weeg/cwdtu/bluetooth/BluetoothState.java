@@ -21,6 +21,7 @@ public class BluetoothState {
     public static final int MESSAGE_TOAST = 5;
 
     public static final int MESSAGE_STATE_TIMEOUT = 6;
+    public static final int MESSAGE_STATE_TIMEOUT_NOT_DISCONNECT = 16;
     public static final int MESSAGE_BLOCK_TIMEOUT = 7;
 
     public static final int MESSAGE_CONVERT_INFO = 8;

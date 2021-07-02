@@ -353,6 +353,7 @@
                             android:id="@+id/real_tem1_timeinfo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
                             android:layout_marginStart="40dp"
                             android:layout_marginLeft="40dp"
                             android:layout_toEndOf="@id/real_time_tem1_labale"
@@ -532,10 +533,9 @@
 
                         <TextView
                             android:id="@+id/real_waterq_timeinfo"
+                            android:layout_centerVertical="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="40dp"
-                            android:layout_marginLeft="40dp"
                             android:layout_toEndOf="@id/real_time_waterq_labale"
                             android:layout_toRightOf="@id/real_time_waterq_labale" />
                     </RelativeLayout>
