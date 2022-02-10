@@ -49,9 +49,11 @@ public class GasSensorSetFragment extends BaseFragment {
     public  String gassensorinfo[][]=
             {
                     {"3","无","0"},
-//                    {"3","WS2100-TTL","65534"},
+//                    {"3","WS2100-TTL","65534"},   //0xFFFE
+                    {"3","UART-TTL","65534"},
                     {"3","RS485","65533"},
-//                    {"3","MIPEX-TTL","65532"},
+//                    {"3","MIPEX-TTL","65532"},     //0xFFFC
+                    {"3","UART-TTL 低功耗","65532"},
                     {"3","RS485 低功耗","65531"},
                     {"3","4-20 mA","65530"},
 //                    {"3","手动输入","65535"},

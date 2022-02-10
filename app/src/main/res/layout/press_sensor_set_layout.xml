@@ -74,11 +74,12 @@
                     style="@style/statesetbtnstyle"
                     android:text="压力传感器"
                     android:layout_margin="3dp"
+                    android:visibility="gone"
                     />
                 <RadioButton
                     android:id="@+id/sensor_gas_1"
                     style="@style/statesetbtnstyle"
-                    android:text="红外气体传感器"
+                    android:text="气体传感器"
                     android:layout_margin="3dp"
                     />
                 <RadioButton
@@ -171,6 +172,12 @@
                      android:layout_width="match_parent"
                      android:layout_height="50dp"
                      android:text="气体传感器校量程" />
+                 <RadioButton
+                     android:id="@+id/press_sensor_vol_measure"
+                     android:layout_width="match_parent"
+                     android:layout_height="50dp"
+                     android:text="电压测量"
+                     />
              </RadioGroup>
          </LinearLayout>
         </ScrollView>

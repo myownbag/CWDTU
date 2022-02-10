@@ -45,18 +45,26 @@ public class InstrumentInputFregment extends BaseFragment {
     private RelativeLayout mReg1998clickrecv;
     private RelativeLayout mReg1999clickrecv;
     private RelativeLayout mReg2000clickrecv;
+    private RelativeLayout mReg1997clickrecv;
+
     private TextView mBuardTx;
     private TextView mParityTx;
     private TextView mDataTx;
     private TextView mStopTx;
+
+    private TextView mBuardTx1;
+    private TextView mParityTx1;
+    private TextView mDataTx1;
+    private TextView mStopTx1;
+
     private TextView mRecodeTmTx;
     private Intent intent;
     private Button mbutread;
     private Spinner mCannelSpiner;
     private int mcurSelect=0;
     private int mpreselect=0;
-    private byte [][] bufofreadcmd=new byte[3][18];
-    String[] listitem={"仪表状态:","仪表类型:","仪表地址:","供电时间(0.01秒):","Elster press 地址:"};
+    private byte [][] bufofreadcmd=new byte[4][18];
+    String[] listitem={"仪表状态:","仪表类型:","仪表地址:","供电时间(0.01秒):","自定义功能:"};
 
     String[] mcannel={"第一路","第二路"};
     ArrayList<Map<String,String>> reg2000list;
@@ -75,13 +83,22 @@ public class InstrumentInputFregment extends BaseFragment {
         }
         mView=inflater.inflate(R.layout.instrumentfraglayout,null,false);
         mReg2000=mView.findViewById(R.id.tv_ins_2000_list);
+        mReg1997clickrecv = mView.findViewById(R.id.but_layout_1997);
         mReg1998clickrecv=mView.findViewById(R.id.but_layout_1998);
         mReg1999clickrecv=mView.findViewById(R.id.but_layout_1999);
         mReg2000clickrecv=mView.findViewById(R.id.but_layout_2000);
+
         mBuardTx=mView.findViewById(R.id.tv_ins_baud_value);
         mParityTx=mView.findViewById(R.id.tv_ins_paritybit_value);
         mDataTx=mView.findViewById(R.id.tv_ins_databit_value);
         mStopTx=mView.findViewById(R.id.tv_ins_stopbit_value);
+
+        mBuardTx1=mView.findViewById(R.id.tv_ins_baud_value1);
+        mParityTx1=mView.findViewById(R.id.tv_ins_paritybit_value1);
+        mDataTx1=mView.findViewById(R.id.tv_ins_databit_value1);
+        mStopTx1=mView.findViewById(R.id.tv_ins_stopbit_value1);
+
+
         mRecodeTmTx=mView.findViewById(R.id.tv_ins_recodegap_value);
         mbutread=mView.findViewById(R.id.tv_ins_btn_read);
         mCannelSpiner=mView.findViewById(R.id.ins_select_spiner);
@@ -94,6 +111,7 @@ public class InstrumentInputFregment extends BaseFragment {
     private void initview() {
         mReg1998clickrecv.setOnClickListener(new OnMyclicklisternerImp());
         mReg1999clickrecv.setOnClickListener(new OnMyclicklisternerImp());
+        mReg1997clickrecv.setOnClickListener(new OnMyclicklisternerImp());
        // mReg2000clickrecv.setOnClickListener(new OnMyclicklisternerImp());
         mbutread.setOnClickListener(new Onbutclicklisterner());
     }
@@ -119,7 +137,7 @@ public class InstrumentInputFregment extends BaseFragment {
         byte[] temp={(byte)0xFD,0x00 ,0x00 ,0x0D ,0x00 ,0x19 ,0x00 ,0x00 ,0x00 ,0x00
                 ,0x00 ,0x00 ,0x00 ,0x00 ,(byte)0xCE ,0x07 ,0x42 ,(byte)0x92};
         Log.d("zl","initsendbuf:"+(1998+2+mcurSelect));
-        for(int i=0;i<3;i++)
+        for(int i=0;i<4;i++)
         {
             ByteBuffer buf1;
             buf1=ByteBuffer.allocateDirect(18);
@@ -136,6 +154,14 @@ public class InstrumentInputFregment extends BaseFragment {
                 buf.rewind();
                 buf.get(bufofreadcmd[i],14,2);
             }
+            else if(i == 3){
+                ByteBuffer buf;
+                buf=ByteBuffer.allocateDirect(4); //无额外内存的直接缓存
+                buf=buf.order(ByteOrder.LITTLE_ENDIAN);//默认大端，小端用这行
+                buf.putInt(1997);
+                buf.rewind();
+                buf.get(bufofreadcmd[i],14,2);
+        }
             else
             {
                 ByteBuffer buf;
@@ -187,13 +213,17 @@ public class InstrumentInputFregment extends BaseFragment {
         }
            String info[][]=InstrumemtItemseetingActivity.baseinfo;
            String facINsinfo[][]= InstrumemtItemseetingActivity.Instrumentinfo;
+        int buad=0;
+        int parity=0;
+        int databit=0;
+        int stopbit=0;
             switch(sendcmeindex)
             {
                 case 0:
-                    int buad=0x000000ff&readOutBuf1[19];
-                    int parity=0x000000ff&(readOutBuf1[20]&0x03);
-                    int databit=0x000000ff&(readOutBuf1[20]&0x0C);
-                    int stopbit=0x000000ff&(readOutBuf1[20]&0x30);
+                      buad=0x000000ff&readOutBuf1[19];
+                      parity=0x000000ff&(readOutBuf1[20]&0x03);
+                      databit=0x000000ff&(readOutBuf1[20]&0x0C);
+                      stopbit=0x000000ff&(readOutBuf1[20]&0x30);
                     for(int i=0;i<info.length;i++)
                     {
                         if(info[i][0].equals("1998")&&info[i][1].equals("1"))
@@ -301,6 +331,44 @@ public class InstrumentInputFregment extends BaseFragment {
 
                     list2000adpater.notifyDataSetChanged();
                     break;
+
+                case 3:
+                      buad=0x000000ff&readOutBuf1[19];
+                      parity=0x000000ff&(readOutBuf1[20]&0x03);
+                      databit=0x000000ff&(readOutBuf1[20]&0x0C);
+                      stopbit=0x000000ff&(readOutBuf1[20]&0x30);
+                    for(int i=0;i<info.length;i++)
+                    {
+                        if(info[i][0].equals("1998")&&info[i][1].equals("1"))
+                        {
+                            if(Integer.valueOf(info[i][2]).intValue()== buad)
+                            {
+                                mBuardTx1.setText(info[i][3]);
+                            }
+                        }
+                        if(info[i][0].equals("1998")&&info[i][1].equals("2"))
+                        {
+                            if(Integer.valueOf(info[i][2]).intValue()== parity)
+                            {
+                                mParityTx1.setText(info[i][3]);
+                            }
+                        }
+                        if(info[i][0].equals("1998")&&info[i][1].equals("3"))
+                        {
+                            if(Integer.valueOf(info[i][2]).intValue()== databit)
+                            {
+                                mDataTx1.setText(info[i][3]);
+                            }
+                        }
+                        if(info[i][0].equals("1998")&&info[i][1].equals("4"))
+                        {
+                            if(Integer.valueOf(info[i][2]).intValue()== stopbit)
+                            {
+                                mStopTx1.setText(info[i][3]);
+                            }
+                        }
+                    }
+                    break;
             }
             sendcmeindex++;
             if(sendcmeindex==bufofreadcmd.length)
@@ -311,6 +379,11 @@ public class InstrumentInputFregment extends BaseFragment {
             {
                 String readOutMsg = DigitalTrans.byte2hex(bufofreadcmd[sendcmeindex]);
                 verycutstatus(readOutMsg);
+            }
+            else if(sendcmeindex == 3)
+            {
+                String readOutMsg = DigitalTrans.byte2hex(bufofreadcmd[sendcmeindex]);
+                verycutstatus(readOutMsg,2000,1);
             }
     }
     private class listadpater extends BaseAdapter
@@ -353,12 +426,20 @@ public class InstrumentInputFregment extends BaseFragment {
             switch (id)
             {
                 case R.id.but_layout_1998:
-                    intent.putExtra("title","通信参数");
+                    intent.putExtra("title","第一路通信参数");
                     intent.putExtra("buad",mBuardTx.getText().toString());
                     intent.putExtra("parity",mParityTx.getText().toString());
                     intent.putExtra("databit",mDataTx.getText().toString());
                     intent.putExtra("stopbit",mStopTx.getText().toString());
                     intent.putExtra("regaddr",1998);
+                    break;
+                case R.id.but_layout_1997:
+                    intent.putExtra("title","第二路通信参数");
+                    intent.putExtra("buad",mBuardTx1.getText().toString());
+                    intent.putExtra("parity",mParityTx1.getText().toString());
+                    intent.putExtra("databit",mDataTx1.getText().toString());
+                    intent.putExtra("stopbit",mStopTx1.getText().toString());
+                    intent.putExtra("regaddr",1997);
                     break;
                 case R.id.but_layout_1999:
                     intent.putExtra("title","数据记录频率(分)");
@@ -413,7 +494,21 @@ public class InstrumentInputFregment extends BaseFragment {
             ToastUtils.showToast(getActivity(), "请先建立蓝牙连接!");
         }
     }
-
+    private void verycutstatus(String readOutMsg,int timeout,int connecttype) {
+        MainActivity parentActivity1 = (MainActivity) getActivity();
+        String strState1 = parentActivity1.GetStateConnect();
+        if(!strState1.equalsIgnoreCase("无连接"))
+        {
+            parentActivity1.mDialog.show();
+            parentActivity1.mDialog.setDlgMsg("读取中...");
+            //String input1 = Constants.Cmd_Read_Alarm_Pressure;
+            parentActivity1.sendData(readOutMsg, "FFFF",timeout,connecttype);
+        }
+        else
+        {
+            ToastUtils.showToast(getActivity(), "请先建立蓝牙连接!");
+        }
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -430,6 +525,15 @@ public class InstrumentInputFregment extends BaseFragment {
                         mParityTx.setText(Set[1]);
                         mDataTx.setText(Set[2]);
                         mStopTx.setText(Set[3]);
+                    }
+                    break;
+                case 1997:
+                    if(Set!=null)
+                    {
+                        mBuardTx1.setText(Set[0]);
+                        mParityTx1.setText(Set[1]);
+                        mDataTx1.setText(Set[2]);
+                        mStopTx1.setText(Set[3]);
                     }
                     break;
                 case 1999:

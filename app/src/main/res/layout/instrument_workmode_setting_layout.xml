@@ -109,7 +109,7 @@
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Elster press 地址:"/>
+            android:text="自定义功能:"/>
         <EditText
             android:id="@+id/instrument_device_elster_value"
             android:layout_width="match_parent"

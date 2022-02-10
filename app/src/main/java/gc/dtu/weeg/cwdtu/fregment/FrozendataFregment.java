@@ -45,7 +45,7 @@ import gc.dtu.weeg.cwdtu.sqltools.MytabOperate;
 import gc.dtu.weeg.cwdtu.utils.CodeFormat;
 import gc.dtu.weeg.cwdtu.utils.Constants;
 import gc.dtu.weeg.cwdtu.utils.DigitalTrans;
-import gc.dtu.weeg.cwdtu.utils.FreezeDataDrawChartActivit;
+//import gc.dtu.weeg.cwdtu.utils.FreezeDataDrawChartActivit;
 import gc.dtu.weeg.cwdtu.utils.ToastUtils;
 
 /**
@@ -191,9 +191,9 @@ public class FrozendataFregment extends BaseFragment implements View.OnClickList
         Btdraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.getInstance(), FreezeDataDrawChartActivit.class);
-                intent.putExtra(Constants.DEVICEID, "84710001"); //84710001  94710004
-                startActivity(intent);
+//                Intent intent=new Intent(MainActivity.getInstance(), FreezeDataDrawChartActivit.class);
+//                intent.putExtra(Constants.DEVICEID, "84710001"); //84710001  94710004
+//                startActivity(intent);
             }
         });
 
@@ -903,11 +903,11 @@ public class FrozendataFregment extends BaseFragment implements View.OnClickList
 
        @Override
        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-           Intent intent=new Intent(MainActivity.getInstance(), FreezeDataDrawChartActivit.class);
-           Log.d("zl",""+MainActivity.getInstance().getmConnectedDeviceName());
-           intent.putExtra(Constants.DEVICEID, MainActivity.getInstance().getmConnectedDeviceName());
-   //        Log.d("zl", "onItemClick: "+MainActivity.getInstance().getmConnectedDeviceName());
-           startActivity(intent);
+//           Intent intent=new Intent(MainActivity.getInstance(), FreezeDataDrawChartActivit.class);
+//           Log.d("zl",""+MainActivity.getInstance().getmConnectedDeviceName());
+//           intent.putExtra(Constants.DEVICEID, MainActivity.getInstance().getmConnectedDeviceName());
+//   //        Log.d("zl", "onItemClick: "+MainActivity.getInstance().getmConnectedDeviceName());
+//           startActivity(intent);
        }
    }
 }

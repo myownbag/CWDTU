@@ -97,7 +97,7 @@ public class instrumentWorkModeSetFragment extends instrumentbaseFragment {
                 .setContentTextSize(20)//设置滚轮文字大小
                 .setDividerColor(Color.LTGRAY)//设置分割线的颜色
                 .setSelectOptions(0, 1)//默认选中项
-                .setBgColor(Color.BLACK)
+                .setBgColor(Color.GRAY)   // BLACK
                 .setTitleBgColor(Color.DKGRAY)
                 .setTitleColor(Color.LTGRAY)
                 .setCancelColor(Color.YELLOW)

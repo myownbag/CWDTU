@@ -38,8 +38,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name="gc.dtu.weeg.cwdtu.utils.NbServiceAddrInputActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name="gc.dtu.weeg.cwdtu.utils.FreezeDataDrawChartActivit"
-            android:screenOrientation="landscape"/>
+<!--        <activity android:name="gc.dtu.weeg.cwdtu.utils.FreezeDataDrawChartActivit"-->
+<!--            android:screenOrientation="landscape"/>-->
         <activity android:name="gc.dtu.weeg.cwdtu.hexfile2bin.FileBrowserActivity"
             android:screenOrientation="portrait" />
         <activity android:name="gc.dtu.weeg.cwdtu.utils.PulseInfoWriteActivity"

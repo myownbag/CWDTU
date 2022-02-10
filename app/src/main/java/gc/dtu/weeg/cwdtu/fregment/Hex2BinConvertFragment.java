@@ -1028,10 +1028,14 @@ public class Hex2BinConvertFragment extends BaseFragment implements  EasyPermiss
             File file = new File(rootPath);
             if(!file.exists())
             {
-                file.mkdirs();
+                boolean test ;
+                test = file.mkdirs();
+                if(test == false)
+                {
+                    ToastUtils.showToast(MainActivity.getInstance(),"创建本地缓存失败");
+                    return;
+                }
             }
-            else
-            {
                 if(mfileName!=null)
                 {
                     String Httpurl= Constants.FIRM_BASEUPDATESERVICER;
@@ -1088,7 +1092,7 @@ public class Hex2BinConvertFragment extends BaseFragment implements  EasyPermiss
 //                    Log.d("zl","recallHttpgetrequest URL:"+Constants.FIRM_BASEUPDATESERVICER+mfileName);
 //                    httpget = x.http().get(params,new recallHttpgetrequest(url) );
                 }
-            }
+
         }
     }
 

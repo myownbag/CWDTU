@@ -102,11 +102,18 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
             {"2000","2","Trancy cpuCard","1021"},
             {"2000","2","PTZBox_IGSM_Modbus","1030"},
             {"2000","2","机床五厂","1031"},
+          //  {"2000","2","科隆流量计","1032"},
+
+              {"2000","2","天津新科通用","1032"},
+              {"2000","2","天津新科MODBUS","1033"},
+            {"2000","2","上海飞奥MODBUS","1034"},
+
+            {"2000","2","德文V5","1035"},
 
             {"2000","2","Control Valve","10500"},
             {"2000","2","电压读取","10501"},
     };
-    public static String factorysinfo[]={"Empty","天信仪表","苍南仪表","德闻仪表","埃创仪表","Elster仪表","爱知仪表","卓度仪表","阀门控制","供水仪表","机床五厂"};
+    public static String factorysinfo[]={"Empty","天信仪表","苍南仪表","德闻仪表","埃创仪表","Elster仪表","爱知仪表","卓度仪表","阀门控制","供水仪表","机床五厂","天津新科","上海飞奥"};
     public static String Instrumentinfo[][]={
             {"0","0","Empty","0"}, //factorysinfo中的序号，   有无子菜单（0：无，1：有） ,子菜单选项  ,选项值
             {"1","1","Trancy 1.2","1001"},
@@ -124,6 +131,7 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
             {"3","1","V3-2","1009"},
             {"3","1","CV","1019"},
             {"3","1","PTZBox_IGSM_Modbus","1030"},
+            {"3","1","V5","1035"},
 
             {"4","1","通用","1010"},
             {"4","1","2003","1011"},
@@ -133,7 +141,7 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
             {"5","1","通用","1014"},
             {"5","1","Modbus","1015"},
 
-            {"6","1","1000以上","1018"},
+            {"6","1","100以上","1018"},
             {"6","1","80以下","1020"},
 
             {"7","1","MFGD","1000"},
@@ -143,8 +151,14 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
 
             {"9","0","脉冲采集","5000"},
             {"9","0","肯特流量计","5001"},
+            {"9","0","科隆流量计","5002"},
 
             {"10","0","通用","1031"},
+
+            {"11","0","通用","1032"},
+            {"11","0","MODBUS","1033"},
+
+            {"12","0","MODBUS","1034"},
     };
 
     int reg;
@@ -187,6 +201,7 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
         switch (reg)
         {
             case 1998:
+            case 1997:
                 Bundle bundle_1 = new Bundle();
                 String[] settings=new String[4];
                 settings[0]=intent.getStringExtra("buad");
@@ -279,6 +294,11 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
         Log.d("zl","InstrumemtItemseetingActivity onClick:"+reg);
         switch (reg)
         {
+            case 1997:
+                headbuf[3]=0x12;
+                headbuf[14]= (byte) 0xCD;
+                sendbuf=new byte[23];
+                break;
             case 1998:
                 headbuf[3]=0x12;
                 headbuf[14]= (byte) 0xCE;
@@ -303,8 +323,16 @@ public class InstrumemtItemseetingActivity extends FragmentActivity implements V
         buf1.put(headbuf);
         buf1.rewind();
         buf1.get(sendbuf,0,headbuf.length);
+        if(reg == 1997)
+        {
+            settings=fragments.get(0).OnbutOKPress(sendbuf);
+        }
+        else
+        {
+            settings=fragments.get(reg-1998).OnbutOKPress(sendbuf);
+        }
 
-        settings=fragments.get(reg-1998).OnbutOKPress(sendbuf);
+
         if(settings==null)
         {
             return;

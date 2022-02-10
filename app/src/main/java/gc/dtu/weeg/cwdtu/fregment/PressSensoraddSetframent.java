@@ -35,6 +35,8 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
    public String cmdgas="+++++4";
    public String cmdexit = "+++++E";
 
+   public String cmdVolmeasure = "MYADDATAV\r";
+
    String[] cmds={"R_1","R_2","W12","W21"};
    Dialog minfodlg;
    String cmdgasitems[]=
@@ -43,7 +45,7 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
                    "ZERO2\r",
                    "CALB 0250\r"
            };
-
+  
    byte[][] factorysetcmd= {
            {(byte) 0xFD, 0x00, 0x00, 0x0E, 0x00,
                    0x15, 0x00, 0x00, 0x00, 0x00,
@@ -252,7 +254,7 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
                 break;
         }
 
-        verycutstatus(readOutMsg);
+        verycutstatus(readOutMsg,12000);
         Log.d("zl",readOutMsg);
 
     }
@@ -342,57 +344,76 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
             str.append((char) readOutBuf1[i]);
         }
         int temp=-1;
-        temp=str.indexOf("OK");
-        Log.d("zl","temp:"+temp);
-        switch (mMainselectmode)
+
+        if(mSelectfun == 7)
         {
-            case 0:
-            case 4:
-                break;
-            case 1:
-                if(temp>=0)
+            readOutMsg = str.toString();
+            StringBuilder str1 = new  StringBuilder();
+            for(i=0;i<readOutMsg.length();i++)
+            {
+                if(readOutMsg.charAt(i) != '\r' && readOutMsg.charAt(i) != '\n')
                 {
-                    mfunstep++;
+                    str1.append(readOutMsg.charAt(i));
                 }
-                else
-                {
-                    mTextResultView.setText("进入压力传感器调试模式失败");
-                    MainActivity.getInstance().mDialog.dismiss();
-                }
-                readOutMsg = DigitalTrans.byte2hex(cmds[mSelectfun].getBytes());
-                verycutstatus(readOutMsg);
-                Log.d("zl", "press: " +CodeFormat.byteToHex(cmds[mSelectfun].getBytes(),cmds[mSelectfun].getBytes().length));
-                Log.d("zl",cmds[mSelectfun]);
-                break;
-            case 2:
-                if(temp>=0)
-                {
-                    mfunstep++;
-                }
-                else
-                {
-                    mTextResultView.setText("进入气体传感器调试模式失败");
-                    MainActivity.getInstance().mDialog.dismiss();
-                }
-                readOutMsg = DigitalTrans.byte2hex(cmdgasitems[0].getBytes());
-                verycutstatus(readOutMsg);
-                Log.d("zl", "press: " +CodeFormat.byteToHex(cmdgasitems[0].getBytes(),cmdgasitems[0].getBytes().length));
-                Log.d("zl",cmdgasitems[0]);
-                break;
-            case 3:
-                if(temp>=0)
-                {
-                   mfunstep++;
-                }
-                else
-                {
-                    mTextResultView.setText("进入气体传感器调试模式失败");
-                    MainActivity.getInstance().mDialog.dismiss();
-                }
-
-                break;
-
+            }
+            mTextResultView.setText(str1.toString() + "mV");
+            MainActivity.getInstance().mDialog.dismiss();
         }
+        else
+        {
+            temp=str.indexOf("OK");
+            Log.d("zl","temp:"+temp);
+            switch (mMainselectmode)
+            {
+                case 0:
+                case 4:
+                    break;
+                case 1:
+                    if(temp>=0)
+                    {
+                        mfunstep++;
+                    }
+                    else
+                    {
+                        mTextResultView.setText("进入压力传感器调试模式失败");
+                        MainActivity.getInstance().mDialog.dismiss();
+                    }
+                    readOutMsg = DigitalTrans.byte2hex(cmds[mSelectfun].getBytes());
+                    verycutstatus(readOutMsg);
+                    Log.d("zl", "press: " +CodeFormat.byteToHex(cmds[mSelectfun].getBytes(),cmds[mSelectfun].getBytes().length));
+                    Log.d("zl",cmds[mSelectfun]);
+                    break;
+                case 2:
+                    if(temp>=0)
+                    {
+                        mfunstep++;
+                    }
+                    else
+                    {
+                        mTextResultView.setText("进入气体传感器调试模式失败");
+                        MainActivity.getInstance().mDialog.dismiss();
+                    }
+                    readOutMsg = DigitalTrans.byte2hex(cmdgasitems[0].getBytes());
+                    verycutstatus(readOutMsg);
+                    Log.d("zl", "press: " +CodeFormat.byteToHex(cmdgasitems[0].getBytes(),cmdgasitems[0].getBytes().length));
+                    Log.d("zl",cmdgasitems[0]);
+                    break;
+                case 3:
+                    if(temp>=0)
+                    {
+                        mfunstep++;
+                    }
+                    else
+                    {
+                        mTextResultView.setText("进入气体传感器调试模式失败");
+                        MainActivity.getInstance().mDialog.dismiss();
+                    }
+
+                    break;
+
+            }
+        }
+
     }
 
     @Override
@@ -418,7 +439,14 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
                     ToastUtils.showToast(MainActivity.getInstance(),"暂时不支持");
                     return;
                 }
-                readOutMsg = DigitalTrans.byte2hex(cmdgas.getBytes());
+                if(mSelectfun == 7)
+                {
+                    readOutMsg =  DigitalTrans.byte2hex(cmdVolmeasure.getBytes());
+                }
+                else
+                {
+                    readOutMsg = DigitalTrans.byte2hex(cmdgas.getBytes());
+                }
                 verycutstatus(readOutMsg);
                 break;
                 default:
@@ -484,6 +512,9 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
                 case R.id.press_sensor_gassensor_calb:
                     mSelectfun=6;
                     break;
+                case R.id.press_sensor_vol_measure:
+                    mSelectfun=7;
+                    break;
             }
         }
     }
@@ -546,15 +577,18 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
     }
     private void setGassettingsVisivility(boolean state )
     {
-        RadioButton bt1,bt2,bt3;
+        RadioButton bt1,bt2,bt3,bt4;
         bt1=mView.findViewById(R.id.press_sensor_gassensor_calb);
         bt2=mView.findViewById(R.id.press_sensor_gassensor_getdata);
         bt3=mView.findViewById(R.id.press_sensor_gassensor_zero);
+        bt4=mView.findViewById(R.id.press_sensor_vol_measure);
+
         if(state)
         {
             bt1.setVisibility(View.VISIBLE);
             bt2.setVisibility(View.VISIBLE);
             bt3.setVisibility(View.VISIBLE);
+            bt4.setVisibility(View.VISIBLE);
             bt2.setChecked(true);
         }
         else
@@ -562,6 +596,7 @@ public class PressSensoraddSetframent extends BaseFragment implements View.OnCli
             bt1.setVisibility(View.GONE);
             bt2.setVisibility(View.GONE);
             bt3.setVisibility(View.GONE);
+            bt4.setVisibility(View.GONE);
         }
     }
 }
